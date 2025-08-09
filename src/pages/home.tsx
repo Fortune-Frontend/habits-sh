@@ -1,12 +1,10 @@
-import { loadHabits, saveHabit, incrementStreak } from './supabaseClient'
-import React from 'react';
-// other imports...
-import { Plus } from "lucide-react";
 import React from "react";
+import { Plus } from "lucide-react";
 import { Habit } from "../components/Habit";
 import { CreateModal } from "../components/modals/CreateModal";
 import { Page } from "../components/Page";
 import { useUser } from "../state/user";
+import { loadHabits, saveHabit, incrementStreak } from "./supabaseClient";
 
 export default function Home() {
   const { habits, createHabit, updateUserInfo } = useUser();
@@ -14,7 +12,8 @@ export default function Home() {
 
   React.useEffect(() => {
     updateUserInfo();
-  }, [localStorage]);
+    loadHabits(); // Load habits when page first loads
+  }, []);
 
   return (
     <>
@@ -29,7 +28,9 @@ export default function Home() {
         </div>
 
         <div className="flex w-full max-w-full flex-col gap-2 md:max-w-[750px]">
-          {habits?.map((habit) => <Habit {...habit} />)}
+          {habits?.map((habit) => (
+            <Habit key={habit.id} {...habit} />
+          ))}
 
           <button
             className="flex h-24 w-full items-center justify-center gap-2 rounded-lg bg-gray text-xl font-bold duration-100 hover:bg-opacity-80"
@@ -38,9 +39,6 @@ export default function Home() {
             <Plus className="size-8" /> Create
           </button>
         </div>
-
-        
-
       </Page>
     </>
   );
