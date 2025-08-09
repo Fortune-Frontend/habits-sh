@@ -35,6 +35,9 @@ export default function Home() {
             <Plus className="size-8" /> Create
           </button>
         </div>
+
+        import { loadHabits, saveHabit, incrementStreak } from './supabaseClient'
+
       </Page>
     </>
   );
