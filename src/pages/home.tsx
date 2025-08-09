@@ -1,3 +1,6 @@
+import { loadHabits, saveHabit, incrementStreak } from './supabaseClient'
+import React from 'react';
+// other imports...
 import { Plus } from "lucide-react";
 import React from "react";
 import { Habit } from "../components/Habit";
@@ -36,7 +39,7 @@ export default function Home() {
           </button>
         </div>
 
-        import { loadHabits, saveHabit, incrementStreak } from './supabaseClient'
+        
 
       </Page>
     </>
