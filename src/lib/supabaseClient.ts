@@ -11,7 +11,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Load all habits
-export async function loadHabits() {
+async function loadHabits() {
   const { data, error } = await supabase
     .from('habits')
     .select('*')
@@ -26,10 +26,10 @@ export async function loadHabits() {
 }
 
 // Save a new habit
-export async function saveHabit(habit: { name: string }) {
+async function saveHabit(habit: { name: string }) {
   const { data, error } = await supabase
     .from('habits')
-    .insert([habit]); // Pass as array
+    .insert([habit]);
 
   if (error) {
     console.error('Error saving habit:', error);
@@ -40,7 +40,7 @@ export async function saveHabit(habit: { name: string }) {
 }
 
 // Increment a habit's streak
-export async function incrementStreak(habitId: string) {
+async function incrementStreak(habitId: string) {
   const { data: habit, error: fetchError } = await supabase
     .from('habits')
     .select('streak')
@@ -65,3 +65,10 @@ export async function incrementStreak(habitId: string) {
 
   return data;
 }
+
+// Explicit exports to avoid missing export errors
+export {
+  loadHabits,
+  saveHabit,
+  incrementStreak
+};
