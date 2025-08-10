@@ -1,24 +1,31 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 // Make sure environment variables exist
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+  console.warn(
+    "⚠️ Missing Supabase environment variables. " +
+      "Check your .env.local (dev) or your Vercel environment variables (prod)."
+  );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create client with fallbacks to prevent runtime crash
+export const supabase = createClient(
+  supabaseUrl || "https://placeholder.supabase.co",
+  supabaseAnonKey || "public-anon-key-placeholder"
+);
 
 // Load all habits
 async function loadHabits() {
   const { data, error } = await supabase
-    .from('habits')
-    .select('*')
-    .order('created_at', { ascending: true });
+    .from("habits")
+    .select("*")
+    .order("created_at", { ascending: true });
 
   if (error) {
-    console.error('Error loading habits:', error);
+    console.error("Error loading habits:", error);
     return [];
   }
 
@@ -27,12 +34,10 @@ async function loadHabits() {
 
 // Save a new habit
 async function saveHabit(habit: { name: string }) {
-  const { data, error } = await supabase
-    .from('habits')
-    .insert([habit]);
+  const { data, error } = await supabase.from("habits").insert([habit]);
 
   if (error) {
-    console.error('Error saving habit:', error);
+    console.error("Error saving habit:", error);
     return null;
   }
 
@@ -42,24 +47,24 @@ async function saveHabit(habit: { name: string }) {
 // Increment a habit's streak
 async function incrementStreak(habitId: string) {
   const { data: habit, error: fetchError } = await supabase
-    .from('habits')
-    .select('streak')
-    .eq('id', habitId)
+    .from("habits")
+    .select("streak")
+    .eq("id", habitId)
     .single();
 
   if (fetchError) {
-    console.error('Error fetching habit:', fetchError);
+    console.error("Error fetching habit:", fetchError);
     return null;
   }
 
   const { data, error } = await supabase
-    .from('habits')
+    .from("habits")
     .update({ streak: habit.streak + 1 })
-    .eq('id', habitId)
+    .eq("id", habitId)
     .select();
 
   if (error) {
-    console.error('Error incrementing streak:', error);
+    console.error("Error incrementing streak:", error);
     return null;
   }
 
@@ -67,8 +72,4 @@ async function incrementStreak(habitId: string) {
 }
 
 // Explicit exports to avoid missing export errors
-export {
-  loadHabits,
-  saveHabit,
-  incrementStreak
-};
+export { loadHabits, saveHabit, incrementStreak };
