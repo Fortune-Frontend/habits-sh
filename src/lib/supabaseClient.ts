@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 // Make sure environment variables exist
-const supabaseUrl=process.env.https://ctdjrxqtajyovwugfkst.supabase.co
+const supabaseUrl=process.env.https://ctdjrxqtajyovwugfkst.supabase.co,
 const supabaseAnonKey=process.env.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0ZGpyeHF0YWp5b3Z3dWdma3N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MDgwMTEsImV4cCI6MjA3MDE4NDAxMX0.qkEGWf9huL_XFs-H0Xg8d877NS4BmyXim9gtFFVo5ek;
 
 if (!supabaseUrl || !supabaseAnonKey) {
