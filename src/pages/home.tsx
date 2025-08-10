@@ -4,7 +4,8 @@ import { Habit } from "../components/Habit";
 import { CreateModal } from "../components/modals/CreateModal";
 import { Page } from "../components/Page";
 import { useUser } from "../state/user";
-import { loadHabits } from "../lib/supabaseClient";
+import { loadHabits } from "../lib/habits";
+;
 
 export default function Home() {
   const { habits, updateUserInfo } = useUser();
