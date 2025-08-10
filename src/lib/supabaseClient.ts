@@ -1,7 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Make sure environment variables exist
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -24,7 +29,7 @@ export async function loadHabits() {
 export async function saveHabit(habit: { name: string }) {
   const { data, error } = await supabase
     .from('habits')
-    .insert(habit);
+    .insert([habit]); // Pass as array
 
   if (error) {
     console.error('Error saving habit:', error);
@@ -36,10 +41,12 @@ export async function saveHabit(habit: { name: string }) {
 
 // Increment a habit's streak
 export async function incrementStreak(habitId: string) {
+  // Simple SQL-like increment
   const { data, error } = await supabase
     .from('habits')
-    .update({ streak: supabase.rpc('increment', { x: 1 }) })
-    .eq('id', habitId);
+    .update({ streak: supabase.raw('streak + 1') }) // raw() is a new Supabase 2.x feature
+    .eq('id', habitId)
+    .select();
 
   if (error) {
     console.error('Error incrementing streak:', error);
