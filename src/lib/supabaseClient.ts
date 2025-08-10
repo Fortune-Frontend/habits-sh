@@ -54,7 +54,8 @@ async function incrementStreak(habitId: string) {
 
   if (fetchError) {
     console.error("Error fetching habit:", fetchError);
-    return null;
+    return null
+      console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
   }
 
   const { data, error } = await supabase
