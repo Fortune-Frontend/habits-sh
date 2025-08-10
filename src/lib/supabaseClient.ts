@@ -41,10 +41,20 @@ export async function saveHabit(habit: { name: string }) {
 
 // Increment a habit's streak
 export async function incrementStreak(habitId: string) {
-  // Simple SQL-like increment
+  const { data: habit, error: fetchError } = await supabase
+    .from('habits')
+    .select('streak')
+    .eq('id', habitId)
+    .single();
+
+  if (fetchError) {
+    console.error('Error fetching habit:', fetchError);
+    return null;
+  }
+
   const { data, error } = await supabase
     .from('habits')
-    .update({ streak: supabase.raw('streak + 1') }) // raw() is a new Supabase 2.x feature
+    .update({ streak: habit.streak + 1 })
     .eq('id', habitId)
     .select();
 
