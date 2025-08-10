@@ -4,17 +4,17 @@ import { Habit } from "../components/Habit";
 import { CreateModal } from "../components/modals/CreateModal";
 import { Page } from "../components/Page";
 import { useUser } from "../state/user";
-import { loadHabits, saveHabit, incrementStreak } from "../lib/supabaseClient.ts";
-
-
+import { loadHabits } from "../lib/supabaseClient";
 
 export default function Home() {
-  const { habits, createHabit, updateUserInfo } = useUser();
+  const { habits, updateUserInfo } = useUser();
   const [showCreateModal, setShowCreateModal] = React.useState(false);
 
   React.useEffect(() => {
     updateUserInfo();
-    loadHabits(); // Load habits when page first loads
+    (async () => {
+      await loadHabits(); // ensures habits are loaded on page load
+    })();
   }, []);
 
   return (
@@ -30,9 +30,11 @@ export default function Home() {
         </div>
 
         <div className="flex w-full max-w-full flex-col gap-2 md:max-w-[750px]">
-          {habits?.map((habit) => (
-            <Habit key={habit.id} {...habit} />
-          ))}
+          {habits && habits.length > 0 ? (
+            habits.map((habit) => <Habit key={habit.id} {...habit} />)
+          ) : (
+            <p className="text-center text-light-gray">No habits yet. Create one!</p>
+          )}
 
           <button
             className="flex h-24 w-full items-center justify-center gap-2 rounded-lg bg-gray text-xl font-bold duration-100 hover:bg-opacity-80"
